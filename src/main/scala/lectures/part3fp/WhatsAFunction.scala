@@ -1,4 +1,4 @@
-package part3fp
+package lectures.part3fp
 
 object WhatsAFunction extends App {
 
