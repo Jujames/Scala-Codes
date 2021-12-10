@@ -1,22 +1,14 @@
 package exercises
 
 abstract class CaseClassList[+A] {
+  
   /*
-      1. Generic traits MyPreducate[-T] with a little method test (T) => Boolean
-      2. Generic trait MyTransformer[-A, B] with a method transform(A) => B
-      3. MyList:
-         - map(transformer) => MyList
-         - filter(predicate) => MyList
-         - flatMap(transformer from A to MyList [B]) => MyList
-
-         class venPredicate extends MyPredicate[Int]
-         class StringToIntTransformer extends MyTransformer[String, Int]
-
-         [1,2,3].map(n * 2) = [2,4,6]
-         [1,2,3,4].filter(n % 2) = [2,4]
-         [1,2,3].flatMap(n => [n, n+1]) => [1,2,2,3,3,4]
-
-     */
+      head = first element of the list
+      tail = remainder of the list
+      isEmpty = is this list empty
+      add(int) => new list with this element added
+      toString => a string representation of the list
+    */
 
 
   def head: A
@@ -28,8 +20,8 @@ abstract class CaseClassList[+A] {
   override def toString: String = "[" + printElements + "]"
 
   def map[B](caseTransformer: MyCaseTransformer[A, B]): CaseClassList[B]
-  def flatMap[B](caseTransformer: MyCaseTransformer[A, CaseClassList[B]]): CaseClassList[B]
-  def filter(casePredicate: MyCasePredicate[A]): CaseClassList[A]
+  def flatMap[B](transformer: MyCaseTransformer[A, CaseClassList[B]]): CaseClassList[B]
+  def filter(predicate: MyCasePredicate[A]): CaseClassList[A]
   // concatenation
   def ++[B >: A](list: CaseClassList[B]): CaseClassList[B]
 }
@@ -43,9 +35,9 @@ object CaseEmpty extends CaseClassList[Nothing] {
   def add[B >: Nothing](element: B): CaseClassList[B] = new CaseCons(element, CaseEmpty)
   def printElements: String = ""
 
-  def map[B](caseTransformer: MyCaseTransformer[Nothing, B]): CaseClassList[B] = CaseEmpty
-  def flatMap[B](caseTransformer: MyCaseTransformer[Nothing, CaseClassList[B]]): CaseClassList[B] = CaseEmpty
-  def filter(casePredicate: MyCasePredicate[Nothing]): CaseClassList[Nothing] = CaseEmpty
+  def map[B](transformer: MyCaseTransformer[Nothing, B]): CaseClassList[B] = CaseEmpty
+  def flatMap[B](transformer: MyCaseTransformer[Nothing, CaseClassList[B]]): CaseClassList[B] = CaseEmpty
+  def filter(predicate: MyCasePredicate[Nothing]): CaseClassList[Nothing] = CaseEmpty
 
   def ++[B >: Nothing](list: CaseClassList[B]): CaseClassList[B] = list
 }
@@ -64,9 +56,9 @@ class CaseCons[+A](h: A, t: CaseClassList[A]) extends CaseClassList[A] {
 
    */
 
-  def filter(casePredicate: MyCasePredicate[A]): CaseClassList[A] =
-    if (casePredicate.caseTest(h)) new CaseCons(h, t.filter(casePredicate))
-    else t.filter(casePredicate)
+  def filter(predicate: MyCasePredicate[A]): CaseClassList[A] =
+    if (predicate.caseTest(h)) new CaseCons(h, t.filter(predicate))
+    else t.filter(predicate)
   /*
    [1,2,3].map(n * 2)
     = new CollectionCons(2, [2,3].map(n * 2))
@@ -74,8 +66,8 @@ class CaseCons[+A](h: A, t: CaseClassList[A]) extends CaseClassList[A] {
     = new CollectionCons(2, new CollectionCons(4, new CollectionCons(6, Empty.map(n * 2))))
     = new CollectionCons(2, new CollectionCons(4, new CollectionsCons(6, Empty)))
   */
-  def map[B](caseTransformer: MyCaseTransformer[A, B]): CaseClassList[B] =
-    new CaseCons(caseTransformer.caseTransform(h),t.map(caseTransformer))
+  def map[B](transformer: MyCaseTransformer[A, B]): CaseClassList[B] =
+    new CaseCons(transformer.caseTransform(h),t.map(transformer))
 
   /*
 
@@ -92,8 +84,8 @@ class CaseCons[+A](h: A, t: CaseClassList[A]) extends CaseClassList[A] {
     = [1,2] ++ [2,3] ++ Empty
     = [1,2,2,3]
   */
-  def flatMap[B](caseTransformer: MyCaseTransformer[A, CaseClassList[B]]): CaseClassList[B] =
-    caseTransformer.caseTransform(h) ++ t.flatMap(caseTransformer)
+  def flatMap[B](transformer: MyCaseTransformer[A, CaseClassList[B]]): CaseClassList[B] =
+    transformer.caseTransform(h) ++ t.flatMap(transformer)
 
 
 }
