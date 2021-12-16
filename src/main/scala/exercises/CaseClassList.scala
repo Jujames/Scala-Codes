@@ -28,7 +28,7 @@ abstract class CaseClassList[+A] {
 
 
 
-object CaseEmpty extends CaseClassList[Nothing] {
+case object CaseEmpty extends CaseClassList[Nothing] {
   def head: Nothing = throw new NoSuchElementException
   def tail: CaseClassList[Nothing] = throw new NoSuchElementException
   def IsEmpty: Boolean = true
@@ -42,7 +42,7 @@ object CaseEmpty extends CaseClassList[Nothing] {
   def ++[B >: Nothing](list: CaseClassList[B]): CaseClassList[B] = list
 }
 
-class CaseCons[+A](h: A, t: CaseClassList[A]) extends CaseClassList[A] {
+case class CaseCons[+A](h: A, t: CaseClassList[A]) extends CaseClassList[A] {
   def head: A = h
   def tail: CaseClassList[A] = t
   def IsEmpty: Boolean = false
