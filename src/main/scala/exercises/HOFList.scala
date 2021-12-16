@@ -59,7 +59,7 @@ case object HOFEmpty extends HOFList[Nothing] {
 
 }
 
-class HOFCons[+A](h: A, t: HOFList[A]) extends HOFList[A] {
+case class HOFCons[+A](h: A, t: HOFList[A]) extends HOFList[A] {
   def head: A = h
   def tail: HOFList[A] = t
   def IsEmpty: Boolean = false

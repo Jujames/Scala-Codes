@@ -59,7 +59,7 @@ case object MyForEmpty extends MyForList[Nothing] {
 
 }
 
-class MyForCons[+A](h: A, t: MyForList[A]) extends MyForList[A] {
+case class MyForCons[+A](h: A, t: MyForList[A]) extends MyForList[A] {
   def head: A = h
   def tail: MyForList[A] = t
   def IsEmpty: Boolean = false
@@ -141,7 +141,7 @@ class MyForCons[+A](h: A, t: MyForList[A]) extends MyForList[A] {
   }
 */
 object MyForListTest extends App {
-  val listOfIntegers: MyForList[Int] = new MyForCons(1, new MyForCons(2, new MyForCons(3,MyForEmpty)))
+  val listOfIntegers: MyForList[Int] = new MyForCons(1, new MyForCons(2, new MyForCons(3, MyForEmpty)))
   val cloneListOfintegers: MyForList[Int] = new MyForCons(1, new MyForCons(2, new MyForCons(3, MyForEmpty)))
   val anotherlistOfIntegers: MyForList[Int] = new MyForCons(4, new MyForCons(5, MyForEmpty))
   val listOfStrings: MyForList[String] = new MyForCons("Hello", new MyForCons("Scala", MyForEmpty))

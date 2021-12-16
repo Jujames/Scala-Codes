@@ -28,7 +28,7 @@ abstract class MyFunctionList[+A] {
 
 
 
-object FunctionEmpty extends MyFunctionList[Nothing] {
+case object FunctionEmpty extends MyFunctionList[Nothing] {
   def head: Nothing = throw new NoSuchElementException
   def tail: MyFunctionList[Nothing] = throw new NoSuchElementException
   def IsEmpty: Boolean = true
@@ -42,7 +42,7 @@ object FunctionEmpty extends MyFunctionList[Nothing] {
   def ++[B >: Nothing](list: MyFunctionList[B]): MyFunctionList[B] = list
 }
 
-class FunctionCons[+A](h: A, t: MyFunctionList[A]) extends MyFunctionList[A] {
+case class FunctionCons[+A](h: A, t: MyFunctionList[A]) extends MyFunctionList[A] {
   def head: A = h
   def tail: MyFunctionList[A] = t
   def IsEmpty: Boolean = false
